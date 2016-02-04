@@ -24,8 +24,8 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table T_Province(id integer primary key autoincrement ,provinceId varchar(25), provinceName varchar(25))";
-        String sql1 = "create table T_City(id integer primary key autoincrement ,cityId varchar(25),cityName varchar(25))";
-        String sql2 = "create table T_County(id integer primary key autoincrement ,countyId varchar(25),countyName varchar(25))";
+        String sql1 = "create table T_City(id integer primary key autoincrement ,cityId varchar(25),cityName varchar(25),provinceId varchar(15))";
+        String sql2 = "create table T_County(id integer primary key autoincrement ,countyId varchar(25),countyName varchar(25),cityId varchar(15))";
         db.execSQL(sql);
         db.execSQL(sql1);
         db.execSQL(sql2);
