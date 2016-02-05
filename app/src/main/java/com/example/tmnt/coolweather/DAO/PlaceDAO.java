@@ -48,6 +48,7 @@ public class PlaceDAO {
         values.put("countyId", id);
         values.put("countyName", name);
         values.put("cityId", cityId);
+        values.put("isSelect",false);
         db.insert("T_County", "id", values);
     }
 
@@ -148,4 +149,47 @@ public class PlaceDAO {
         }
     }
 
+    public void insertWeather(String id, String name, String weather) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("countyId", id);
+        values.put("countyName", name);
+        values.put("weatherId", weather);
+        db.insert("T_Weather", "id", values);
+    }
+
+
+    public String querWeatherId(String id) {
+        String weatherId = null;
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("T_Weather", new String[]{"weatherId"}, "countyId=?", new String[]{id}, null, null, null);
+        while (cursor.moveToNext()) {
+            weatherId = cursor.getString(0);
+        }
+        return weatherId;
+
+    }
+    public List<String> querySelect(boolean isSelect){
+        int flag;
+        if (isSelect){
+            flag=1;
+        }
+        else {
+            flag=0;
+        }
+        List<String>list=new ArrayList<>();
+        db=dbHelper.getReadableDatabase();
+        Cursor cursor=db.query("T_County",new String[]{"countyId"},"isSelect=?",new String[]{String.valueOf(flag)},null,null,null);
+        while(cursor.moveToNext()){
+            list.add(cursor.getString(0));
+        }
+        return list;
+    }
+
+    public void updateSelect(boolean isSelect,String id){
+        db=dbHelper.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put("isSelect",isSelect);
+        db.update("T_County",values,"countyId=?",new String[]{id});
+    }
 }

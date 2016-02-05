@@ -27,12 +27,12 @@ public class HttpUtils {
      * @param urlStr
      * @param callBack
      */
-    public static void doGetAsyn(final String urlStr, final CallBack callBack) {
+    public static void doGetAsyn(final String urlStr,final boolean flag, final CallBack callBack) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    byte[] result = doGet(urlStr);
+                    byte[] result = doGet(urlStr,flag);
                     if (callBack != null) {
                         callBack.onRequestComplete(result);
                     }
@@ -83,7 +83,7 @@ public class HttpUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] doGet(String urlStr) {
+    public static byte[] doGet(String urlStr,boolean flag) {
         URL url = null;
         HttpURLConnection conn = null;
         InputStream is = null;
@@ -95,6 +95,10 @@ public class HttpUtils {
             conn.setConnectTimeout(TIMEOUT_IN_MILLIONS);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("accept", "*/*");
+            if (flag){
+                conn.setRequestProperty("apikey","39b34610db211933660e6c518b138829");
+            }
+
             conn.setRequestProperty("connection", "Keep-Alive");
             if (conn.getResponseCode() == 200) {
                 is = conn.getInputStream();

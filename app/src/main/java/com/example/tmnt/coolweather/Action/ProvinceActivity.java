@@ -98,7 +98,7 @@ public class ProvinceActivity extends Activity {
                 url = "http://www.weather.com.cn/data/list3/city" + provinceId + ".xml";
                 if (!dao.isHasCity(provinceId)) {
 
-                    HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
+                    HttpUtils.doGetAsyn(url, false, new HttpUtils.CallBack() {
                         @Override
                         public void onRequestComplete(byte[] result) {
                             String place = StringUtils.toStrings(result);

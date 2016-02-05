@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tmnt.coolweather.Action.ProvinceActivity;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 
 public class MainActivity extends Activity {
-
+    private boolean flag = false;
     private Button select;
     public static final String FLAGSELECT = "flagselect";
     public static final String SEND = "send";
@@ -59,43 +60,51 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        select = (Button) findViewById(R.id.select);
-        select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dao = new PlaceDAO(getApplicationContext());
-                if (dao.queryQrovinceAll().size() == 0) {
-                    HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
-                        @Override
-                        public void onRequestComplete(byte[] result) {
-                            String place = StringUtils.toStrings(result);
-                            Message message = Message.obtain();
-                            message.what = 0;
-                            message.obj = place;
-                            handler.sendMessage(message);
-                        }
+        dao = new PlaceDAO(getApplicationContext());
+        if (dao.querySelect(true).size()!=0) {
+            setContentView(R.layout.weather_layout);
+            TextView countyName,countyCount,weatherNum,weatherShow,weatherPraShow,wind,day1,day2,day3,day4;
 
-                        @Override
-                        public void onError(Exception e) {
-                            Toast.makeText(MainActivity.this, "网络连接错误或选择错误", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Intent intent = new Intent(MainActivity.this, ProvinceActivity.class);
-                    intent.putExtra(FLAGSELECT, 1);
-                    startActivityForResult(intent, 0);
-                    finish();
+           // setContentView(R.layout.weather_layout);
+        } else {
+            setContentView(R.layout.activity_main);
+            select = (Button) findViewById(R.id.select);
+            select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (dao.queryQrovinceAll().size() == 0) {
+                        HttpUtils.doGetAsyn(url, false, new HttpUtils.CallBack() {
+                            @Override
+                            public void onRequestComplete(byte[] result) {
+                                String place = StringUtils.toStrings(result);
+                                Message message = Message.obtain();
+                                message.what = 0;
+                                message.obj = place;
+                                handler.sendMessage(message);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Toast.makeText(MainActivity.this, "网络连接错误或选择错误", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, ProvinceActivity.class);
+                        intent.putExtra(FLAGSELECT, 1);
+                        startActivityForResult(intent, 0);
+                        finish();
+                    }
+
                 }
-
-            }
-        });
+            });
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.add_city, menu);
         return true;
     }
 
@@ -107,8 +116,12 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.add_city:
+
+                break;
+            case R.id.refush:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

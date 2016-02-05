@@ -37,9 +37,9 @@ public class CityActivity extends Activity {
     private String cityId;
     private PlaceDAO dao;
     private String url;
-    private ArrayList<String>county;
-    public static final String CITY="city";
-    public static final String CITYFLAG="cityflag";
+    private ArrayList<String> county;
+    public static final String CITY = "city";
+    public static final String CITYFLAG = "cityflag";
     private Handler handler = new Handler() {
         /**
          * Subclasses must implement this to receive messages.
@@ -47,29 +47,30 @@ public class CityActivity extends Activity {
          * @param msg
          */
         @Override
-    public void handleMessage(Message msg) {
-        super.handleMessage(msg);
-        if (msg.what == 0) {
-            county = new ArrayList<>();
-            String returnString = (String) msg.obj;
-            Map<String, String> map = SpiltUtils.returnProvince(returnString);
-            Set<Map.Entry<String, String>> set = map.entrySet();
-            Iterator<Map.Entry<String, String>> iterator = set.iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
-                dao.insertCounty(entry.getValue(), entry.getKey(), cityId);
-                county.add(entry.getKey());
-            }
-            Log.i("click Province",list.get(2));
-            //String s = (String) msg.obj;
-            Intent intent = new Intent(CityActivity.this, CountyActivity.class);
-            intent.putStringArrayListExtra(CITY, county);
-            intent.putExtra(CITYFLAG, 1);
-            startActivity(intent);
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                county = new ArrayList<>();
+                String returnString = (String) msg.obj;
+                Map<String, String> map = SpiltUtils.returnProvince(returnString);
+                Set<Map.Entry<String, String>> set = map.entrySet();
+                Iterator<Map.Entry<String, String>> iterator = set.iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, String> entry = iterator.next();
+                    dao.insertCounty(entry.getValue(), entry.getKey(), cityId);
+                    county.add(entry.getKey());
+                }
+                //Log.i("click Province",list.get(2));
+                //String s = (String) msg.obj;
+                Intent intent = new Intent(CityActivity.this, CountyActivity.class);
+                intent.putStringArrayListExtra(CITY, county);
+                intent.putExtra(CITYFLAG, 1);
+                startActivity(intent);
 
+            }
         }
-    }
-};
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +82,7 @@ public class CityActivity extends Activity {
         if (flag == 1) {
             list = intent.getStringArrayListExtra(ProvinceActivity.PROVINCE);
         } else if (flag == 2) {
-            String id=intent.getStringExtra(ProvinceActivity.PROVINCE);
+            String id = intent.getStringExtra(ProvinceActivity.PROVINCE);
             List<City> cities = dao.queryCityAll(id);
             list = new ArrayList<>();
             for (int i = 0; i < cities.size(); i++) {
@@ -97,9 +98,9 @@ public class CityActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cityId = dao.queryCity(list.get(position));
                 url = "http://www.weather.com.cn/data/list3/city" + cityId + ".xml";
-                if (!dao.isHasCounty(cityId)) {
 
-                    HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
+                if (!dao.isHasCounty(cityId)) {
+                    HttpUtils.doGetAsyn(url, false, new HttpUtils.CallBack() {
                         @Override
                         public void onRequestComplete(byte[] result) {
                             String place = StringUtils.toStrings(result);
