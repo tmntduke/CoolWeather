@@ -119,7 +119,7 @@ public class CountyActivity extends Activity {
             Intent intent = new Intent(CountyActivity.this, MainActivity.class);
             intent.putExtra("county", place);
             startActivity(intent);
-
+            finish();
 
         }
 

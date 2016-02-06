@@ -66,7 +66,7 @@ public class CityActivity extends Activity {
                 intent.putStringArrayListExtra(CITY, county);
                 intent.putExtra(CITYFLAG, 1);
                 startActivity(intent);
-
+                finish();
             }
         }
     };
@@ -121,6 +121,7 @@ public class CityActivity extends Activity {
                     intent.putExtra(CITY, cityId);
                     intent.putExtra(CITYFLAG, 2);
                     startActivity(intent);
+                    finish();
                 }
 
 

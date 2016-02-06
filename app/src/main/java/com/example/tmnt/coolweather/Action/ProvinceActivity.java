@@ -63,7 +63,7 @@ public class ProvinceActivity extends Activity {
                 intent.putStringArrayListExtra(PROVINCE, city);
                 intent.putExtra(PROVICEFLAG, 1);
                 startActivity(intent);
-
+                finish();
             }
         }
     };
@@ -119,7 +119,7 @@ public class ProvinceActivity extends Activity {
                     intent.putExtra(PROVINCE, provinceId);
                     intent.putExtra(PROVICEFLAG, 2);
                     startActivity(intent);
-
+                    finish();
                 }
 
 
