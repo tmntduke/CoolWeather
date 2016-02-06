@@ -78,7 +78,7 @@ public class ProvinceActivity extends Activity {
         int flag = intent.getIntExtra(MainActivity.FLAGSELECT, 0);
         if (flag == 2) {
             list = intent.getStringArrayListExtra(MainActivity.SEND);
-        } else if (flag == 1) {
+        } else  {
             List<Province> provinces = dao.queryQrovinceAll();
             list = new ArrayList<>();
             Log.i("database", provinces.get(2).getPrivince_name());

@@ -192,4 +192,15 @@ public class PlaceDAO {
         values.put("isSelect",isSelect);
         db.update("T_County",values,"countyId=?",new String[]{id});
     }
+
+    public String queryCountyName(String id) {
+        String name = null;
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("T_County", new String[]{"countyName"}, "countyId=?", new String[]{id}, null, null, null);
+        if (cursor.moveToNext()) {
+            name = cursor.getString(0);
+        }
+        return name;
+    }
+
 }
