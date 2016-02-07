@@ -7,4 +7,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/cityManager"
+        android:showAsAction="never"
+        android:title="管理"></item>
 </menu>

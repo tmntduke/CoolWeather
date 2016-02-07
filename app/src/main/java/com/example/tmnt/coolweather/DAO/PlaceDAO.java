@@ -48,7 +48,7 @@ public class PlaceDAO {
         values.put("countyId", id);
         values.put("countyName", name);
         values.put("cityId", cityId);
-        values.put("isSelect",false);
+        values.put("isSelect", false);
         db.insert("T_County", "id", values);
     }
 
@@ -169,28 +169,28 @@ public class PlaceDAO {
         return weatherId;
 
     }
-    public List<String> querySelect(boolean isSelect){
+
+    public List<String> querySelect(boolean isSelect) {
         int flag;
-        if (isSelect){
-            flag=1;
+        if (isSelect) {
+            flag = 1;
+        } else {
+            flag = 0;
         }
-        else {
-            flag=0;
-        }
-        List<String>list=new ArrayList<>();
-        db=dbHelper.getReadableDatabase();
-        Cursor cursor=db.query("T_County",new String[]{"countyId"},"isSelect=?",new String[]{String.valueOf(flag)},null,null,null);
-        while(cursor.moveToNext()){
+        List<String> list = new ArrayList<>();
+        db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("T_County", new String[]{"countyId"}, "isSelect=?", new String[]{String.valueOf(flag)}, null, null, null);
+        while (cursor.moveToNext()) {
             list.add(cursor.getString(0));
         }
         return list;
     }
 
-    public void updateSelect(boolean isSelect,String id){
-        db=dbHelper.getWritableDatabase();
-        ContentValues values=new ContentValues();
-        values.put("isSelect",isSelect);
-        db.update("T_County",values,"countyId=?",new String[]{id});
+    public void updateSelect(boolean isSelect, String id) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("isSelect", isSelect);
+        db.update("T_County", values, "countyId=?", new String[]{id});
     }
 
     public String queryCountyName(String id) {
@@ -202,5 +202,27 @@ public class PlaceDAO {
         }
         return name;
     }
+
+    public void updateFlag(boolean flag) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("flag", flag);
+        db.update("T_Flag", values, null, null);
+    }
+
+    public boolean query() {
+        db = dbHelper.getReadableDatabase();
+        int falge = 0;
+        Cursor cursor = db.query("T_Flag", new String[]{"flag"}, "id=?", new String[]{String.valueOf(1)}, null, null, null);
+        while (cursor.moveToNext()) {
+            falge = cursor.getInt(0);
+        }
+        if (falge == 1) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+
 
 }

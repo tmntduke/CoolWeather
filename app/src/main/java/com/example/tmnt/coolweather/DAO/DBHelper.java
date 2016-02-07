@@ -27,10 +27,14 @@ public class DBHelper extends SQLiteOpenHelper {
         String sql1 = "create table T_City(id integer primary key autoincrement ,cityId varchar(25),cityName varchar(25),provinceId varchar(15))";
         String sql2 = "create table T_County(id integer primary key autoincrement ,countyId varchar(25),countyName varchar(25),cityId varchar(15),isSelect bool)";
         String sql3 = "create table T_Weather(id integer primary key autoincrement,countyId varchar(25), countyName varchar(15),weatherId varchar(25))";
+        String sql4 = "create table T_Flag(id integer primary key autoincrement, flag bool)";
+        String sql5 = "insert into T_Flag(flag) values (0)";
         db.execSQL(sql);
         db.execSQL(sql1);
         db.execSQL(sql2);
         db.execSQL(sql3);
+        db.execSQL(sql4);
+        db.execSQL(sql5);
     }
 
     /**
