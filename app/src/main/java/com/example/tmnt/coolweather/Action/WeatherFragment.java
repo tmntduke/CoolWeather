@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.tmnt.coolweather.DAO.PlaceDAO;
 import com.example.tmnt.coolweather.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,15 +27,16 @@ public class WeatherFragment extends Fragment {
     private String countyId;
     private TextView countyName, countyCount, weatherNum, weatherShow, weatherPraShow, wind, day1, day2, day3, day4;
     private PlaceDAO dao;
-    public static final String POSITION="position";
+    public static final String POSITION = "position";
     private int postition;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         countyId = (String) getArguments().getSerializable(RETURNFRAGMENTID);
         dao = new PlaceDAO(getActivity().getApplicationContext());
-        postition= (int) getArguments().getSerializable(POSITION);
+        postition = (int) getArguments().getSerializable(POSITION);
     }
 
 
@@ -53,18 +55,19 @@ public class WeatherFragment extends Fragment {
         day3 = (TextView) view.findViewById(R.id.day3);
         day4 = (TextView) view.findViewById(R.id.day4);
         countyName.setText(dao.queryCountyName(countyId));
-        countyCount.setText((postition+1 )+"/" + dao.querySelect(true).size());
+        countyCount.setText((postition + 1) + "/" + dao.querySelect(true).size());
         day1.setText(getWeekOfDate(new Date(System.currentTimeMillis()), 0));
         day2.setText(getWeekOfDate(new Date(System.currentTimeMillis()), 1));
         day3.setText(getWeekOfDate(new Date(System.currentTimeMillis()), 2));
         day4.setText(getWeekOfDate(new Date(System.currentTimeMillis()), 3));
+
         return view;
     }
 
-    public static WeatherFragment newInstance(String countyId,int position) {
+    public static WeatherFragment newInstance(String countyId, int position) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(RETURNFRAGMENTID, countyId);
-        bundle.putSerializable(POSITION,position);
+        bundle.putSerializable(POSITION, position);
         WeatherFragment fragmentCrime = new WeatherFragment();
         fragmentCrime.setArguments(bundle);
         return fragmentCrime;
@@ -75,13 +78,28 @@ public class WeatherFragment extends Fragment {
         String[] weekDaysCode = {"0", "1", "2", "3", "4", "5", "6"};
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_WEEK,-1);
-        int intWeek = (calendar.get(Calendar.DAY_OF_WEEK) - 1) - count;
-        if (intWeek < 0) {
-            intWeek = 7 - count;
-            return weekDaysName[intWeek];
+        calendar.add(Calendar.DAY_OF_WEEK, (-count));
+        Date date1 = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE");
+        String s = simpleDateFormat.format(date1);
+        String ss=null;
+        if (s.equals("Monday")) {
+            ss = weekDaysName[1];
+        } else if (s.equals("Sunday")) {
+            ss = weekDaysName[0];
+        } else if (s.equals("Saturday")) {
+            ss = weekDaysName[6];
+        } else if (s.equals("Friday")) {
+            ss = weekDaysName[5];
+        } else if (s.equals("Thursday")) {
+            ss = weekDaysName[4];
+        } else if (s.equals("Wednesday")) {
+            ss = weekDaysName[3];
+        } else if (s.equals("Tuesday")) {
+            ss = weekDaysName[2];
         }
-        return weekDaysName[intWeek];
+
+        return ss;
     }
 
 }
