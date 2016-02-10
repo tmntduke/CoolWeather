@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tmnt.coolweather.DAO.PlaceDAO;
@@ -26,6 +27,8 @@ public class WeatherFragment extends Fragment {
     public static final String RETURNFRAGMENTID = "returnFragmentId";
     private String countyId;
     private TextView countyName, countyCount, weatherNum, weatherShow, weatherPraShow, wind, day1, day2, day3, day4;
+    private ImageView weatherImage1;
+    private com.example.tmnt.coolweather.Dview.TextViewPlus tp1,tp2,tp3,tp4;
     private PlaceDAO dao;
     public static final String POSITION = "position";
     private int postition;
@@ -35,6 +38,7 @@ public class WeatherFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         countyId = (String) getArguments().getSerializable(RETURNFRAGMENTID);
+
         dao = new PlaceDAO(getActivity().getApplicationContext());
         postition = (int) getArguments().getSerializable(POSITION);
     }
@@ -49,6 +53,11 @@ public class WeatherFragment extends Fragment {
         weatherNum = (TextView) view.findViewById(R.id.weatherNum);
         weatherShow = (TextView) view.findViewById(R.id.weatherShow);
         weatherPraShow = (TextView) view.findViewById(R.id.weatherPraShow);
+        weatherImage1=(ImageView)view.findViewById(R.id.weatherICO);
+        tp1=(com.example.tmnt.coolweather.Dview.TextViewPlus)view.findViewById(R.id.day1ICO);
+        tp2=(com.example.tmnt.coolweather.Dview.TextViewPlus)view.findViewById(R.id.day2ICO);
+        tp3=(com.example.tmnt.coolweather.Dview.TextViewPlus)view.findViewById(R.id.day3ICO);
+        tp4=(com.example.tmnt.coolweather.Dview.TextViewPlus)view.findViewById(R.id.day4ICO);
         wind = (TextView) view.findViewById(R.id.wind);
         day1 = (TextView) view.findViewById(R.id.day1);
         day2 = (TextView) view.findViewById(R.id.day2);

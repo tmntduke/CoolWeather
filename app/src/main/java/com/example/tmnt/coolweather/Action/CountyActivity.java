@@ -47,6 +47,7 @@ public class CountyActivity extends Activity {
     private String weather;
     String place = null;
 
+    //private String weatherName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,11 +79,7 @@ public class CountyActivity extends Activity {
                 name = list.get(position);
                 countyId = dao.queryCounty(name);
                 dao.updateSelect(true, countyId);
-                if (dao.querWeatherId(countyId) == null) {
-                    new MyAsyncTask().execute("first");
-                } else {
-                    new MyAsyncTask().execute("second");
-                }
+                new MyAsyncTask().execute();
             }
         });
     }
@@ -117,7 +114,8 @@ public class CountyActivity extends Activity {
             super.onPostExecute(s);
             dialog.dismiss();
             Intent intent = new Intent(CountyActivity.this, MainActivity.class);
-            intent.putExtra("county", place);
+            intent.putExtra("county", s);
+            // Log.i("weatherInfo", s);
             startActivity(intent);
             finish();
 
@@ -140,34 +138,44 @@ public class CountyActivity extends Activity {
         @Override
         protected String doInBackground(String... params) {
 
-            if (params[0].equals("first")) {
-                String url = "http://www.weather.com.cn/data/list3/city" + countyId + ".xml";
-                HttpUtils.doGetAsyn(url, false, new HttpUtils.CallBack() {
-                    @Override
-                    public void onRequestComplete(byte[] result) {
-                        String place = StringUtils.toStrings(result);
-                        Map<String, String> map = SpiltUtils.returnProvince(place);
-                        Set<Map.Entry<String, String>> set = map.entrySet();
-                        Iterator<Map.Entry<String, String>> iterator = set.iterator();
-                        while (iterator.hasNext()) {
-                            Map.Entry<String, String> entry = iterator.next();
-                            weather = entry.getKey();
-                            dao.insertWeather(entry.getValue(), name, entry.getKey());
-                        }
-                    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        Toast.makeText(CountyActivity.this, "网络连接错误或选择错误", Toast.LENGTH_SHORT).show();
+            String url = "http://www.weather.com.cn/data/list3/city" + countyId + ".xml";
+            HttpUtils.doGetAsyn(url, false, new HttpUtils.CallBack() {
+                @Override
+                public void onRequestComplete(byte[] result) {
+                    String place = StringUtils.toStrings(result);
+                    Map<String, String> map = SpiltUtils.returnProvince(place);
+                    Set<Map.Entry<String, String>> set = map.entrySet();
+                    Iterator<Map.Entry<String, String>> iterator = set.iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, String> entry = iterator.next();
+                        weather = entry.getKey();
+                        dao.insertWeather(entry.getValue(), name, entry.getKey());
                     }
-                });
-            }
+                }
 
-            String weatherURL = "http://apis.baidu.com/apistore/weatherservice/cityid?cityid=" + dao.querWeatherId(countyId);
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(CountyActivity.this, "网络连接错误或选择错误", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            String weatherURL = "http://apis.baidu.com/apistore/weatherservice/cityname?cityname=" + name;
+            //Log.i("Weather", dao.querWeatherId(countyId));
             HttpUtils.doGetAsyn(weatherURL, true, new HttpUtils.CallBack() {
                 @Override
                 public void onRequestComplete(byte[] result) {
+                    //Log.i("Weather", "start");
                     place = StringUtils.toStrings(result);
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("weather", place);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    StringBuffer stringBuffer = new StringBuffer();
+                    stringBuffer.append(jsonObject.toString());
+                    Log.i("weather", String.valueOf(stringBuffer));
                 }
 
                 @Override
@@ -176,7 +184,7 @@ public class CountyActivity extends Activity {
                 }
             });
 
-
+            //Log.i("weather", place);
             return place;
         }
     }

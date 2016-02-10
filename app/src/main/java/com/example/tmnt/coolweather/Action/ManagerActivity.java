@@ -37,12 +37,11 @@ public class ManagerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manager_layout);
-        MainActivity.finishActivity();
+
         gridView = (GridView) findViewById(R.id.gridView);
         dao = new PlaceDAO(getApplicationContext());
         list = dao.querySelect(true);
         final MyAdapter myAdapter = new MyAdapter(getApplicationContext(), list);
-        Log.i("manager", "start");
         gridView.setAdapter(myAdapter);
         gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         gridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
@@ -73,6 +72,7 @@ public class ManagerActivity extends Activity {
                 switch (item.getItemId()) {
                     case R.id.delete_menu:
                         SharedPreferences get = getSharedPreferences("delete", MODE_PRIVATE);
+                        MainActivity.finishActivity();
                         int i = get.getInt("position", 0);
                         //list.remove(i);
                         dao.updateSelect(false, list.get(i));

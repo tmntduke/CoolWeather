@@ -54,9 +54,10 @@ public class MainActivity extends FragmentActivity {
     private ViewPager mViewPager;
     //private Spinner spinner;
     private Button select;
-     static List<Activity>list2=new ArrayList<>();
+    static List<Activity> list2 = new ArrayList<>();
     //private String countryId;
     private String name;
+    private String weatherNews;
     public static final String FLAGSELECT = "flagselect";
     public static final String SEND = "send";
     PlaceDAO dao;
@@ -92,8 +93,10 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         dao = new PlaceDAO(getApplicationContext());
         addActivity(this);
+
+
         if (dao.querySelect(true).size() != 0) {
-            list1  = dao.querySelect(true);
+            list1 = dao.querySelect(true);
             mViewPager = new ViewPager(this);
             mViewPager.setId(R.id.ViewPager);
             setContentView(mViewPager);
@@ -101,7 +104,7 @@ public class MainActivity extends FragmentActivity {
             mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
                 @Override
                 public Fragment getItem(int position) {
-                    return WeatherFragment.newInstance(list1.get(position),position);
+                    return WeatherFragment.newInstance(list1.get(position), position);
                 }
 
                 @Override
@@ -164,6 +167,20 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * Dispatch onStart() to all fragments.  Ensure any created loaders are
+     * now started.
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = getIntent();
+        if (intent!=null){
+            weatherNews=intent.getStringExtra("county");
+            //Log.i("MainActivity",weatherNews);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -184,7 +201,6 @@ public class MainActivity extends FragmentActivity {
             case R.id.add_city:
                 Intent intent = new Intent(MainActivity.this, ProvinceActivity.class);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.refush:
                 break;
@@ -237,12 +253,13 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-    public static void addActivity(Activity activity){
+    public static void addActivity(Activity activity) {
 
         list2.add(activity);
     }
-    public static void finishActivity(){
-        for (Activity activity:list2){
+
+    public static void finishActivity() {
+        for (Activity activity : list2) {
             activity.finish();
         }
     }
